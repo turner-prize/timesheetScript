@@ -11,6 +11,7 @@ def CreateTable():
     conn.close()
 
 def GetProjects():
+    #fetches unique list of projects to choose from, and sorts into alphabeticl order
     conn = sqlite3.connect('log.db')
     c = conn.cursor()
     c.execute("Select distinct project from log")
@@ -20,31 +21,40 @@ def GetProjects():
     conn.close()
     return MyProjects
 
+def InsertProjects(sqlDate,sqlProject,sqlTimeLength):
+    conn = sqlite3.connect('log.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO log VALUES (?,?,?)", (sqlDate,sqlProject,sqlTimeLength))
+    conn.commit()
+    conn.close()
 
 def run():
     if not os.path.isfile('log.db'):
         CreateTable()
-    ProjectNumbers = int(input("How many projects have you worked on today?\n(Include internal work like learning or MBD projects) "))
+    ProjectNumbers = int(input("""How many projects have you worked on today?\n
+                                Include internal work like learning or MBD projects) """))
 
     for i in range(ProjectNumbers):
         projectList = GetProjects()
+
         print("Choose from previous projects, or enter new project \n")
-        for j,proj in enumerate(projectList):
-            print (f"{j}: {proj}")
-        Project = input(f"\nEnter number or new project: ")
+
+        for idNo,project in enumerate(projectList):
+            print (f"{idNo}: {project}")
+
+        xProject = input(f"\nEnter number or new project: ")
+        
         try: 
-            Project = int(Project)
-            Project = projectList[Project]
+            xProject = int(xProject)
+            xProject = projectList[xProject]
         except:
             pass
+
         TimeLength = input("How long did you spend? ")
         if not i == (ProjectNumbers -1):
             print("\n---Next Project---\n")
-        conn = sqlite3.connect('log.db')
-        c = conn.cursor()
-        c.execute("INSERT INTO log VALUES (?,?,?)", (datetime.datetime.now(),Project.strip(),TimeLength))
-        conn.commit()
-        conn.close()
+        
+        InsertProjects(datetime.datetime.now(),xProject.strip(),TimeLength)
 
 if __name__ == "__main__":
     run()
