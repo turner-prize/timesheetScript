@@ -42,7 +42,7 @@ def run():
             print("\n---Next Project---\n")
         conn = sqlite3.connect('log.db')
         c = conn.cursor()
-        c.execute("INSERT INTO log VALUES (?,?,?)", (datetime.datetime.now(),Project,TimeLength))
+        c.execute("INSERT INTO log VALUES (?,?,?)", (datetime.datetime.now(),Project.strip(),TimeLength))
         conn.commit()
         conn.close()
 
