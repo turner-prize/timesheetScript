@@ -12,7 +12,6 @@ def CreateTable():
 
 def run():
     if not os.path.isfile('log.db'):
-        print("Creating database")
         CreateTable()
     ProjectNumbers = int(input("How many projects have you worked on today? (Include internal work like learning or MBD projects)"))
 
@@ -25,7 +24,5 @@ def run():
         conn.commit()
         conn.close()
 
-
-run()
-
-
+if __name__ == "__main__":
+    run()
